@@ -22,15 +22,20 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('greet').innerHTML = greet();
     document.getElementById('platform-info').innerHTML = os.platform();
     document.getElementById('env-name').innerHTML = env.name;
-    MongoClient.connect("mongodb://ewlgsandkj34k54:AGhk5kjafhau4sdkjg@ds119368.mlab.com:19368/pentesting_database", function(err, db) {
+    MongoClient.connect("mongodb://ewlgsandkj34k54:AGhk5kjafhau4sdkjg@ds119368.mlab.com:19368/pentesting_database",
+    function(err, db) {
       if(!err) {
         console.log("Hi Ireland!");
       }
       console.log(db);
       var collection = db.collection('allDatabases');
-      console.log(collection);
-      // db.collection('allDatabases').find({}).forEach(function(err, doc) {
-      //   console.log(doc);
-      // });
+      collection.find({}).toArray(function(err, result) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          console.log(result);
+        }
+      });
     });
 });
