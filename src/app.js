@@ -87,29 +87,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
       } else if (os.platform() == "darwin") {
-        shell.exec('arp', function(status, output) {
-          var resultArr = output.replace( / +/g, ' ' ).split('\n').map(Function.prototype.call, String.prototype.trim).slice(1);
+        shell.exec('arp -a', function(status, output) {
+          var resultArr = output.split('\n');
 
           resultArr.forEach(function(element, index, arr) {
             element = element.split(" ");
-            if(element.length === 6){
                 netdiscoverResults[index] = {
-                    ipAddr: element[0],
-                    hwType: element[1],
-                    macAddr: element[2],
-                    flags: element[3],
+                    hostName: element[0],
+                    ipAddr: element[1].replace("(","").replace(")",""),
+                    hwType: element[7].replace("[","").replace("]",""),
+                    macAddr: element[3],
                     mask: element[4],
                     interface: element[5]
                 };
-            }else if (element.length === 5) {
-              netdiscoverResults[index] = {
-                  ipAddr: element[0],
-                  hwType: element[1],
-                  macAddr: element[2],
-                  flags: element[3],
-                  interface: element[4]
-              };
-            }
           });
           console.log("Result:");
           console.log(netdiscoverResults);
