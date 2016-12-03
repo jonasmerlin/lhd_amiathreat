@@ -7,7 +7,7 @@ import { remote } from 'electron'; // native electron module
 import jetpack from 'fs-jetpack'; // module loaded from npm
 import { greet } from './hello_world/hello_world'; // code authored by you in this project
 import env from './env';
-import { MongoClient } from 'mongodb';
+import { db } from './db/db';
 
 console.log('Loaded environment variables:', env);
 
@@ -22,20 +22,5 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('greet').innerHTML = greet();
     document.getElementById('platform-info').innerHTML = os.platform();
     document.getElementById('env-name').innerHTML = env.name;
-    MongoClient.connect("mongodb://ewlgsandkj34k54:AGhk5kjafhau4sdkjg@ds119368.mlab.com:19368/pentesting_database",
-    function(err, db) {
-      if(!err) {
-        console.log("Hi Ireland!");
-      }
-      console.log(db);
-      var collection = db.collection('allDatabases');
-      collection.find({}).toArray(function(err, result) {
-        if (err) {
-          console.log(err);
-        }
-        else {
-          console.log(result);
-        }
-      });
-    });
+    db();
 });
