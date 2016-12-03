@@ -28,6 +28,13 @@ function startsWithDigit(value) {
   return !isNaN(parseInt(value));
 }
 
+var data = {ip: '192.168.43.1',
+            mac: '58:2a:f7:85:1b:03',
+            count: 1,
+            len: 42,
+            vendor: 'Huawei Technologies Co., Ltd'
+};
+
 // Holy crap! This is browser window with HTML and stuff, but I can read
 // here files like it is node.js! Welcome to Electron world :)
 console.log('The author of this app is:', appDir.read('package.json', 'json').author);
@@ -42,6 +49,18 @@ document.addEventListener('DOMContentLoaded', function () {
     // document.getElementById('platform-info').innerHTML = os.platform();
     // document.getElementById('env-name').innerHTML = env.name;
     // db();
+
+    shell.exec('which nmap', function(status, output) {
+      if (status != 0) {
+        shell.exec('bzip2 -cd nmap-7.31.tar.bz2 | tar xvf -; cd nmap-7.31; ./configure; make; su root; make install', function(status, output) {
+          if (status != 0) {
+            console.log('Could not install nmap');
+            console.log(output);
+          }
+        });
+      }
+    });
+
     document.getElementById('checkButton').addEventListener('click', function() {
       $('.container').html('<div class="spinner">\
             <div class="rect1"></div>\
@@ -52,7 +71,24 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>'
       );
       window.setTimeout(function () {
-        $('.container').html('<p>Finished!</p>')
+        $('.container').html('\
+        <h1>Threats found:</h1>\
+        <div class="threat">\
+        <p>IP: ' + data.ip + '</p>\
+        <p>MAC Address: ' + data.mac + '</p>\
+        <p>Vendor: ' + data.vendor + '</p>\
+        <p>Kind of threat: <span class="threat-kind">Standard Password</span></p>\
+        <p>Standard-User: admin | Standard-Password: 1234</p>\
+        <input type="button" onclick="location.href=\'https://www.hs-hannover.de/typo3/\';" value="Change Password" />\
+        </div>\
+        <div class="threat">\
+        <p>IP: ' + data.ip + '</p>\
+        <p>MAC Address: ' + data.mac + '</p>\
+        <p>Vendor: ' + data.vendor + '</p>\
+        <p>Kind of threat: <span class="threat-kind">Old Firmware</span></p>\
+        <p>Newset Version: 2.2.1 | You Have: 2.1.3</p>\
+        </div>\
+        ')
       }, 5000);
     });
 
@@ -61,6 +97,11 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Exit status:', status);
         console.log('Program output:', output);
         networkInterfaces = output.split('\n').map(Function.prototype.call, String.prototype.trim).filter(String);
+        if (os.platform() == "darwin") {
+          networkInterfaces.forEach(function(element, index, arr) {
+            networkInterfaces[index] = element.split(':')[0];
+          });
+        }
         console.log(networkInterfaces);
       });
       console.log(os.platform());
@@ -92,14 +133,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
           resultArr.forEach(function(element, index, arr) {
             element = element.split(" ");
-                netdiscoverResults[index] = {
-                    hostName: element[0],
-                    ipAddr: element[1].replace("(","").replace(")",""),
-                    hwType: element[7].replace("[","").replace("]",""),
-                    macAddr: element[3],
-                    mask: element[4],
-                    interface: element[5]
-                };
+            if (element.length > 1) {
+              netdiscoverResults[index] = {
+                  hostName: element[0],
+                  ipAddr: element[1].replace("(","").replace(")",""),
+                  hwType: element[7].replace("[","").replace("]",""),
+                  macAddr: element[3],
+                  mask: element[4],
+                  interface: element[5]
+              };
+            }
           });
           console.log("Result:");
           console.log(netdiscoverResults);
