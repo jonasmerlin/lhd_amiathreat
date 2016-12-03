@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // document.getElementById('greet').innerHTML = greet();
     // document.getElementById('platform-info').innerHTML = os.platform();
     // document.getElementById('env-name').innerHTML = env.name;
-    db();
+    // db();
     document.getElementById('checkButton').addEventListener('click', function() {
       $('.container').html('<div class="spinner">\
             <div class="rect1"></div>\
@@ -54,9 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
       window.setTimeout(function () {
         $('.container').html('<p>Finished!</p>')
       }, 5000);
-      document.getElementById('greet').innerHTML = greet();
-      document.getElementById('platform-info').innerHTML = os.platform();
-      document.getElementById('env-name').innerHTML = env.name;
+    });
 
       // Async call to exec()
       shell.exec('ifconfig | expand | cut -c1-8 | sort | uniq -u | awk -F: "{print $1;}"', function(status, output) {
