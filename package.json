@@ -1,6 +1,6 @@
 {
   "name": "electron-boilerplate",
-  "productName": "Electron Boilerplate",
+  "productName": "Am I A Threat?",
   "description": "Starter for your Electron application",
   "version": "0.0.0",
   "author": "Mr. Gumby <mr.gumby@example.com>",
@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "fs-jetpack": "^0.10.2",
+    "jquery": "^3.1.1",
     "mongodb": "^2.2.12",
     "mongoose": "^4.7.1"
   },
